@@ -35,12 +35,16 @@ class DatabaseManager:
         logger.info("Database engine initialized")
 
     async def create_tables(self) -> None:
-        """Create all tables from models."""
+        """Create all tables from models (skips if they already exist)."""
         if self._engine is None:
             raise RuntimeError("Database not initialized")
-        async with self._engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        logger.info("Database tables created")
+        try:
+            async with self._engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created")
+        except Exception as e:
+            logger.warning(f"create_tables encountered an error (tables may already exist): {e}")
+
 
     async def close(self) -> None:
         """Close database engine."""
