@@ -101,7 +101,7 @@ export default function Analytics() {
           value={(metrics?.change_failure_rate || 0).toFixed(1)}
           unit="%"
           trend={-2}
-          color="orange"
+          color="purple"
         />
         <MetricCard
           label="MTTR"
