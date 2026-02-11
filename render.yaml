@@ -22,7 +22,6 @@ services:
     repo: https://github.com/KalyankumarKonduru/release-manager.git
     branch: main
     healthCheckPath: /health
-    preDeployCommand: python seed.py
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -45,7 +44,7 @@ services:
   # Frontend Static Site
   - type: web
     name: release-manager-web
-    plan: static
+    env: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist
     repo: https://github.com/KalyankumarKonduru/release-manager.git

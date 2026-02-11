@@ -26,6 +26,31 @@ logging.basicConfig(level=settings.LOG_LEVEL)
 logger = logging.getLogger(__name__)
 
 
+async def _seed_demo_user() -> None:
+    """Create demo user if it doesn't exist (runs on startup)."""
+    from sqlalchemy import select
+    from app.core.security import hash_password
+    from app.models.user import User
+
+    async with db.get_session() as session:
+        result = await session.execute(
+            select(User).where(User.email == "demo@example.com")
+        )
+        if result.scalar_one_or_none():
+            return
+        user = User(
+            email="demo@example.com",
+            username="demo",
+            full_name="Demo User",
+            hashed_password=hash_password("password123"),
+            is_active=True,
+            is_admin=True,
+        )
+        session.add(user)
+        await session.commit()
+        logger.info("Demo user seeded: demo@example.com")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
@@ -50,6 +75,9 @@ async def lifespan(app: FastAPI):
         await db.initialize()
         await db.create_tables()
         logger.info("Database initialized successfully")
+
+        # Seed demo user on first run
+        await _seed_demo_user()
 
         # Initialize Redis
         logger.info("Initializing Redis...")
