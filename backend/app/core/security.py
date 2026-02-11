@@ -6,8 +6,10 @@ from uuid import UUID
 import jwt
 import bcrypt
 
-SECRET_KEY = "your-secret-key-change-in-production"
-ALGORITHM = "HS256"
+from app.core.config import settings
+
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
 
 
 def hash_password(password: str) -> str:

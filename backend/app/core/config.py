@@ -7,6 +7,7 @@ It uses Pydantic v2 settings management for validation and type safety.
 
 from typing import Optional
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings
 
 
@@ -14,8 +15,7 @@ class Settings(BaseSettings):
     """
     Application settings management.
 
-    Settings are loaded from environment variables with the APP_ prefix.
-    Example: APP_DEBUG=true for setting debug mode.
+    Settings are loaded from environment variables.
     """
 
     # Application
@@ -57,21 +57,19 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     class Config:
-        """Pydantic configuration."""
-
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = True
 
-    @property
-    def database_url(self) -> str:
-        """Get the database URL."""
-        return self.DATABASE_URL
-
-    @property
-    def redis_url(self) -> str:
-        """Get the Redis URL."""
-        return self.REDIS_URL
+    @model_validator(mode="after")
+    def fix_database_url_scheme(self) -> "Settings":
+        """Convert Render's postgresql:// to postgresql+asyncpg://."""
+        url = self.DATABASE_URL
+        if url.startswith("postgres://"):
+            self.DATABASE_URL = url.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif url.startswith("postgresql://") and "+asyncpg" not in url:
+            self.DATABASE_URL = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return self
 
 
 settings = Settings()
