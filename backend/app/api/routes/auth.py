@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,15 +22,18 @@ from app.schemas import (
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
+bearer_scheme = HTTPBearer()
+
 
 async def get_current_user(
-    token: str, db: AsyncSession = Depends(get_db)
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: AsyncSession = Depends(get_db),
 ) -> User:
-    """Get current user from token."""
+    """Get current user from Bearer token in Authorization header."""
     from app.core.security import decode_token
 
     try:
-        payload = decode_token(token)
+        payload = decode_token(credentials.credentials)
         user_id = UUID(payload.get("sub"))
     except Exception:
         raise HTTPException(

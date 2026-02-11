@@ -70,12 +70,12 @@ export function Header({ onMenuClick, isSidebarOpen = true }: HeaderProps) {
             <div className="flex items-center gap-3 pl-4 border-l border-gray-700">
               <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center">
                 <span className="text-sm font-medium text-white">
-                  {user.name.charAt(0).toUpperCase()}
+                  {(user.name || user.full_name || user.email || '?').charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="hidden sm:block">
-                <p className="text-sm font-medium text-gray-100">{user.name}</p>
-                <p className="text-xs text-gray-500">{user.role}</p>
+                <p className="text-sm font-medium text-gray-100">{user.name || user.full_name || user.username}</p>
+                <p className="text-xs text-gray-500">{user.role || (user.is_admin ? 'admin' : 'user')}</p>
               </div>
             </div>
           )}

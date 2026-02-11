@@ -71,7 +71,7 @@ export default function Dashboard() {
         />
         <MetricCard
           label="Avg MTTR"
-          value={`${metrics?.average_mttr_hours.toFixed(1) || 0}h`}
+          value={`${(metrics?.average_mttr_hours ?? 0).toFixed(1)}h`}
           color="purple"
           icon={<Clock className="w-8 h-8 text-purple-400" />}
         />
@@ -133,7 +133,7 @@ export default function Dashboard() {
             <div>
               <p className="text-xs text-gray-400 font-medium">Deployment Frequency</p>
               <p className="text-2xl font-bold text-indigo-400 mt-1">
-                {metrics?.deployment_frequency_per_day.toFixed(2) || 0}/day
+                {(metrics?.deployment_frequency_per_day ?? 0).toFixed(2)}/day
               </p>
             </div>
             <div className="border-t border-gray-700 pt-4">
@@ -145,7 +145,7 @@ export default function Dashboard() {
             <div className="border-t border-gray-700 pt-4">
               <p className="text-xs text-gray-400 font-medium">Lead Time</p>
               <p className="text-2xl font-bold text-blue-400 mt-1">
-                {metrics?.lead_time_hours.toFixed(1) || 0}h
+                {(metrics?.lead_time_hours ?? 0).toFixed(1)}h
               </p>
             </div>
           </div>

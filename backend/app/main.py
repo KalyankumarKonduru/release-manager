@@ -171,9 +171,9 @@ def create_app() -> FastAPI:
             "redoc": f"{settings.API_V1_PREFIX}/redoc",
         }
 
-    # TODO: Register API routers here
-    # from app.api.v1 import router as api_v1_router
-    # app.include_router(api_v1_router, prefix=settings.API_V1_PREFIX)
+    # Register API routers
+    from app.api import api_router
+    app.include_router(api_router)
 
     logger.info(f"FastAPI application '{settings.APP_NAME}' created successfully")
     return app

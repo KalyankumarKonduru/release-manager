@@ -227,7 +227,7 @@ async def deploy_release(
     release_id: UUID,
     environment_id: UUID = Query(...),
     current_user: Annotated[User, Depends(get_current_user)] = None,
-    db: AsyncSession = Depends(get_db) = None,
+    db: AsyncSession = Depends(get_db),
 ) -> MessageResponse:
     """
     Trigger deployment for a release to an environment.

@@ -1,10 +1,14 @@
 export interface User {
   id: string
   email: string
-  name: string
+  name?: string
+  full_name?: string
+  username?: string
   avatar?: string
-  role: 'admin' | 'release-manager' | 'developer' | 'viewer'
-  team_id: string
+  role?: 'admin' | 'release-manager' | 'developer' | 'viewer'
+  is_active?: boolean
+  is_admin?: boolean
+  team_id?: string
   created_at: string
 }
 
