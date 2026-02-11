@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: release-manager
+  labels:
+    name: release-manager
+    environment: production
+    managed-by: terraform

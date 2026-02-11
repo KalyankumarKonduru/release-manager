@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-manager-frontend-service
+  namespace: release-manager
+  labels:
+    app: release-manager-frontend
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: release-manager-frontend
+  sessionAffinity: None
